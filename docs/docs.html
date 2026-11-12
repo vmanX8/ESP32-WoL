@@ -5,13 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Documentation — ESP32 Wake-on-LAN via Tailscale</title>
   <meta name="description" content="Full documentation for esp32-wol: setup, configuration, architecture, and troubleshooting for ESP32 Wake-on-LAN via Tailscale and WireGuard.">
-  <link rel="canonical" href="https://medinajaime.github.io/esp32-wakeonlan/docs.html">
 
   <!-- Open Graph -->
   <meta property="og:title" content="Documentation — ESP32 Wake-on-LAN via Tailscale">
   <meta property="og:description" content="Full documentation for esp32-wol: setup, configuration, architecture, and troubleshooting for ESP32 Wake-on-LAN via Tailscale and WireGuard.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://medinajaime.github.io/esp32-wakeonlan/docs.html">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary">
@@ -256,7 +254,7 @@
     <ul class="nav-links">
       <li><a href="index.html">Home</a></li>
       <li><a href="docs.html" style="color:var(--text)">Docs</a></li>
-      <li><a href="https://github.com/medinajaime/esp32-wakeonlan" target="_blank" class="btn-nav">GitHub ↗</a></li>
+      <li><a href="https://github.com/vmanX8/ESP32-WoL" target="_blank" class="btn-nav">GitHub ↗</a></li>
     </ul>
   </div>
 </nav>
@@ -349,8 +347,8 @@
     </div>
 
     <h3>1. Clone the repository</h3>
-    <pre><code class="language-bash">git clone https://github.com/medinajaime/esp32-wakeonlan.git
-cd esp32-wakeonlan</code></pre>
+    <pre><code class="language-bash">git clone https://github.com/vmanX8/ESP32-WoL.git
+cd ESP32-WoL</code></pre>
 
     <h3>2. Run the setup script</h3>
     <pre><code class="language-bash">./scripts/setup.sh</code></pre>
@@ -473,12 +471,12 @@ WakeOnLan=magic</code></pre>
     <ol>
       <li>Go to <a href="https://login.tailscale.com/admin/settings/keys" target="_blank">tailscale.com/admin/settings/keys</a></li>
       <li>Click <strong>Generate auth key</strong></li>
-      <li>Check <strong>Reusable</strong> and <strong>Ephemeral</strong></li>
+      <li>Select key reuse, expiration and ephemeral-device settings appropriate to the intended persistent identity</li>
       <li>Copy the key — it looks like <code>tskey-auth-kXXXXXXX-XXXXXXXXXX</code></li>
     </ol>
 
     <div class="callout">
-      <strong>Tip:</strong> Use an <em>ephemeral</em> key so the device is automatically removed from your admin panel if it goes offline for more than a few minutes. This keeps your device list clean.
+      <strong>Identity:</strong> Ephemeral device settings affect the device lifecycle. Review expiry and persistent identity requirements before provisioning.
     </div>
 
     <!-- ── Building & Flashing ────────────────────────── -->
@@ -572,14 +570,14 @@ Done! ESP32 confirmed (attempt 3).</code></pre>
     <pre><code class="language-bash"># Single attempt (may need to retry if ESP32 is reconnecting)
 echo wake | nc -u 100.126.x.x 9999 -w1
 
-# Retry loop (reliable — covers a full reconnect cycle)
+# Retry loop (best effort; not guaranteed across reconnects)
 for i in $(seq 1 25); do
   echo wake | nc -u 100.126.x.x 9999 -w1
   sleep 1
 done</code></pre>
 
     <div class="callout">
-      <strong>Note:</strong> The manual <code>nc</code> approach doesn't receive the ACK. Use <code>scripts/wake-pc</code> for reliable confirmation.
+      <strong>Note:</strong> The manual <code>nc</code> approach doesn't receive the ACK. Use <code>scripts/wake-pc</code> to observe an application ACK; an ACK is not proof that the target powered on.
     </div>
 
     <!-- ── Architecture ───────────────────────────────── -->
@@ -613,7 +611,7 @@ done</code></pre>
       </tbody>
     </table>
 
-    <p>The <strong>WireGuard netif is never torn down</strong> during a normal coordination reconnect — only if the device enters ERROR state. This means the UDP socket stays valid and can receive triggers even during the ~12-second reconnection window.</p>
+    <p>During coordination reconnects, transport and listener availability depend on the firmware state. The remote wake path worked in the recorded sessions, but repeated reconnects and long-term recovery remain unverified.</p>
 
     <h2 id="wireguard-derp">WireGuard &amp; DERP</h2>
 
@@ -698,7 +696,7 @@ Bytes 6–101 : &lt;target MAC&gt; × 16          (MAC repeated 16 times)</code>
 
     <p>During this window:</p>
     <ul>
-      <li>The UDP socket is <strong>kept alive</strong> — the WireGuard netif is not torn down</li>
+      <li>UDP listener and WireGuard interface lifetimes depend on the connection state</li>
       <li>Triggers received during reconnection are still processed</li>
       <li>When coordination comes back up, the socket is refreshed (new WireGuard handshakes + CallMeMaybe to all peers)</li>
     </ul>
@@ -740,7 +738,7 @@ Bytes 6–101 : &lt;target MAC&gt; × 16          (MAC repeated 16 times)</code>
 
     <h3>DISCO socket errors in serial output</h3>
     <pre><code>E ml_disco: disco_send_udp4: socket not initialized!</code></pre>
-    <p>This is non-fatal. DISCO is used for direct UDP path optimisation (bypassing the DERP relay). If it fails, the firmware falls back to DERP, which works reliably for WoL purposes. You can ignore these messages.</p>
+    <p>DISCO is used for direct-path optimization. The tested gateway used DERP relay even when DISCO probes failed; this is not a reliability guarantee during repeated reconnects. Check the application UDP response and Proxmox TCP readiness separately.</p>
 
     <!-- ── Limitations ────────────────────────────────── -->
 
@@ -759,7 +757,7 @@ Bytes 6–101 : &lt;target MAC&gt; × 16          (MAC repeated 16 times)</code>
         </tr>
         <tr>
           <td>No trigger authentication</td>
-          <td>Any device on your Tailscale network can trigger a wake. Use Tailscale ACL rules to restrict access if needed.</td>
+          <td>The listener does not enforce a fully audited application-level authorization policy. Restrict UDP/9999 with Tailnet grants/ACLs; do not expose it via a public router port-forward.</td>
         </tr>
         <tr>
           <td>Coordination reconnects every ~12 s</td>
