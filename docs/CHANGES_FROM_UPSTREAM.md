@@ -1,8 +1,6 @@
-# Final implementation changes relative to upstream
+# Implementation differences from upstream
 
-**Scope:** Tested ESP32-WROOM-32D dev kit adaptation, 10 November 2026. This is
-an account of the **final changes kept in the working firmware**, not a history
-of failed experiments. Original code and setup are attributed in
+**Scope:** ESP32-WROOM-32D dev kit firmware adaptation, with functional tests recorded on 10 November 2026. This document describes the changes retained in the tested firmware revision. Original code and setup are attributed in
 [UPSTREAM_ATTRIBUTION.md](UPSTREAM_ATTRIBUTION.md).
 
 ## Baseline and provenance
@@ -12,8 +10,7 @@ provides the ESP32/Tailscale/WoL architecture, setup scripts, UDP trigger and
 magic-packet sender. The validated adaptation commit `4acd135` is based on
 upstream commit `e87e3ef`, as shown by the published Git history. The available
 review includes original/modified source snapshots, accumulated Git diffs
-and device logs; it does not constitute a fully reconstructed upstream-to-head
-patch review of every file in the repository.
+and device logs; the scope is limited to the reviewed source and test evidence rather than a complete file-by-file verification of every upstream change.
 
 On the Windows checkout, the staged six-C-file comparison gave **639 additions,
 543 deletions** with end-of-line whitespace ignored. This figure reflects the
@@ -59,6 +56,5 @@ git diff --ignore-space-at-eol --stat e87e3ef 4acd135 -- lib/tailscale/src lib/t
 git diff --ignore-space-at-eol e87e3ef 4acd135 -- lib/tailscale/src/ts_coordination.c lib/tailscale/src/ts_wireguard.c
 ```
 
-Keep source snapshots, patches and private firmware backups outside a public
-Git repository. Avoid using the raw `git diff --stat` insertion count as a
+Keep firmware backups containing credentials, NVS data and machine-specific configuration outside the public repository. Avoid using the raw `git diff --stat` insertion count as a
 feature count when CRLF/LF differs from the upstream index.

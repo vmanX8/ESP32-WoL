@@ -3,11 +3,11 @@
  * Tested board: ESP32-WROOM-32D dev kit (no PSRAM)
  * Port  : /dev/ttyUSB0
  *
- * The device joins your Tailscale network and listens on a
+ * The device joins the configured Tailscale network and listens on a
  * UDP port.  Any UDP packet arriving on that port triggers a WoL magic packet
  * broadcast on the local LAN, waking the configured PC.
  *
- * Trigger from any Tailscale peer:
+ * Application wake trigger from a permitted Tailscale peer:
  *   echo wake | nc -u <esp32-tailscale-ip> 9999 -w1
  *
  * Configure via:  idf.py menuconfig  →  "Wake-on-LAN Configuration"

@@ -2,8 +2,8 @@
  * @file ts.h
  * @brief Tailscale - Tailscale-Compatible VPN for ESP32
  *
- * Production-ready WireGuard/Tailscale implementation optimized for ESP32-S3.
- * Memory footprint: 103KB SRAM + 24KB PSRAM
+ * Embedded WireGuard/Tailscale implementation; security and endurance review is ongoing.
+ * This fork is tested on ESP32-WROOM-32D without PSRAM; memory usage depends on build configuration.
  *
  * Features:
  * - Full WireGuard encryption (ChaCha20-Poly1305)
@@ -12,7 +12,7 @@
  * - STUN client for direct connections
  * - DISCO protocol for path optimization
  *
- * @version 3.0 (Production Ready)
+ * @version 3.0 (upstream API version; experimental device integration)
  * @date November 2024
  */
 

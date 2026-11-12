@@ -28,15 +28,11 @@ Wake-on-LAN on ESP32.
   name and mark are associated with that project. This repository is not
   officially endorsed by WireGuard or Tailscale.
 
-## Local adaptation and AI-assisted work
+## My adaptation and development process
 
-The local project owner selected the hardware and integration architecture,
-configured the development environment and network, performed the hardware
-and end-to-end tests, interpreted logs and maintained the project. Code
-reviews, candidate patches and documentation were developed with assistance
-from ChatGPT and GitHub Copilot; generated changes were manually integrated,
-compiled and functionally tested only to the extent stated in
-[VALIDATION_AND_LIMITATIONS.md](VALIDATION_AND_LIMITATIONS.md).
+I selected the ESP32-WROOM-32D hardware and the Proxmox integration architecture, configured the development and network environment, reviewed test results and maintained this adaptation. I used ChatGPT and GitHub Copilot for code review, candidate fixes and documentation. The implementation incorporates upstream software and AI-assisted changes; I do not represent those dependencies as code I originally authored.
+
+The build, flash and end-to-end results supported by the recorded tests are listed in [VALIDATION_AND_LIMITATIONS.md](VALIDATION_AND_LIMITATIONS.md). Tests that were not performed or do not establish security or endurance are identified separately.
 
 See [CHANGES_FROM_UPSTREAM.md](CHANGES_FROM_UPSTREAM.md) for the changes retained
 in the validated local code. Credit does not imply the original developers
