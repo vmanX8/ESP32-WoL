@@ -4,19 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ESP32 Wake-on-LAN — Wake your PC from anywhere via Tailscale</title>
-  <meta name="description" content="A $5 ESP32 runs Tailscale and WireGuard directly on the chip and wakes your PC from anywhere. No Raspberry Pi, no port forwarding, no always-on server.">
-  <link rel="canonical" href="https://medinajaime.github.io/esp32-wakeonlan/">
+  <meta name="description" content="ESP32-WROOM-32D gateway for Tailscale-relayed Wake-on-LAN, with two observed remote wake cycles and documented security limitations.">
 
   <!-- Open Graph -->
   <meta property="og:title" content="ESP32 Wake-on-LAN — Wake your PC from anywhere via Tailscale">
-  <meta property="og:description" content="A $5 ESP32 runs Tailscale and WireGuard directly on the chip and wakes your PC from anywhere. No Raspberry Pi, no port forwarding, no always-on server.">
+  <meta property="og:description" content="ESP32-WROOM-32D gateway for Tailscale-relayed Wake-on-LAN, with two observed remote wake cycles and documented security limitations.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://medinajaime.github.io/esp32-wakeonlan/">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="ESP32 Wake-on-LAN — Wake your PC from anywhere via Tailscale">
-  <meta name="twitter:description" content="A $5 ESP32 runs Tailscale and WireGuard directly on the chip and wakes your PC from anywhere. No Raspberry Pi, no port forwarding, no always-on server.">
+  <meta name="twitter:description" content="ESP32-WROOM-32D gateway for Tailscale-relayed Wake-on-LAN, with two observed remote wake cycles and documented security limitations.">
 
   <link rel="stylesheet" href="style.css">
   <style>
@@ -405,7 +403,7 @@
       <li class="hide-mobile"><a href="#how-it-works">How it works</a></li>
       <li class="hide-mobile"><a href="#quickstart">Quick start</a></li>
       <li><a href="docs.html">Docs</a></li>
-      <li><a href="https://github.com/medinajaime/esp32-wakeonlan" target="_blank" class="btn-nav">GitHub ↗</a></li>
+      <li><a href="https://github.com/vmanX8/ESP32-WoL" target="_blank" class="btn-nav">GitHub ↗</a></li>
     </ul>
   </div>
 </nav>
@@ -413,13 +411,13 @@
 <!-- Hero -->
 <section class="hero">
   <div class="hero-eyebrow">
-    <span>⚡</span> ESP32 &nbsp;·&nbsp; Tailscale &nbsp;·&nbsp; WireGuard &nbsp;·&nbsp; ~$5
+    <span>⚡</span> ESP32-WROOM-32D &nbsp;·&nbsp; Tailscale &nbsp;·&nbsp; WireGuard
   </div>
   <h1>Wake your PC<br>from <em>anywhere</em>.</h1>
   <p class="hero-sub">
-    A $5 ESP32 joins your Tailscale network and stays on your LAN 24/7.
-    Send one UDP packet from anywhere in the world — your PC wakes up.
-    No port forwarding. No static IP. No always-on server.
+    An ESP32-WROOM-32D remains powered on and joins the configured Tailscale network.
+    An authorized Tailscale client sends a UDP wake request to the ESP32 gateway, which broadcasts a Magic Packet to the local Ethernet network.
+    No public port forwarding in the tested setup. The ESP32 remains powered on.
   </p>
   <div class="hero-actions">
     <a href="#quickstart" class="btn btn-primary">Get started →</a>
@@ -442,7 +440,7 @@
       <div><span class="t-ok">✓</span> <span class="t-out">Found ESP-IDF at: ~/esp/esp-idf</span></div>
       <div><span class="t-out">  WiFi SSID:          </span><span class="t-cyan">MyHomeNetwork</span></div>
       <div><span class="t-out">  Tailscale Auth Key: </span><span class="t-cyan">tskey-auth-●●●●●</span></div>
-      <div><span class="t-out">  Target PC MAC:      </span><span class="t-cyan">10:FF:E0:08:CC:4C</span></div>
+      <div><span class="t-out">  Target PC MAC:      </span><span class="t-cyan">AA:BB:CC:DD:EE:FF</span></div>
       <div class="t-out">  Building... ██████████████████ 100%</div>
       <div class="t-out">  Flashing... ██████████████████ 100%</div>
       <div><span class="t-ok">✓</span> <span class="t-out">Done! ESP32 Tailscale IP: </span><span class="t-cyan">100.x.x.x</span></div>
@@ -497,7 +495,7 @@
       <div class="step-card fade-in">
         <div class="step-num">2</div>
         <h3>You send a single UDP packet</h3>
-        <p>From any device on your Tailscale network — laptop, phone, home server — run <code>wake-pc</code>. The packet is WireGuard-encrypted end-to-end.</p>
+        <p>From any device on your Tailscale network — laptop, phone, home server — run <code>wake-pc</code>. The tested path used Tailscale/WireGuard over DERP relay. DERP TLS authentication and wake authorization still need security hardening.</p>
       </div>
       <div class="step-card fade-in">
         <div class="step-num">3</div>
@@ -530,7 +528,7 @@
       </div>
       <div class="why-card highlight fade-in">
         <h4>✓ esp32-wol</h4>
-        <p>$5 hardware. Zero port forwarding. Works behind any NAT. Secure by default (Tailscale + WireGuard). Draws ~80 mW.</p>
+        <p>ESP32-based remote wake with no public port forwarding in the tested setup. Two physical wake cycles passed; DERP TLS authentication and command authorization remain open.</p>
       </div>
     </div>
   </div>
@@ -576,7 +574,8 @@
   <div class="glow-accent glow-accent--cyan" style="top: 0; left: -150px;"></div>
   <div class="container">
     <div class="section-label fade-in">Quick start</div>
-    <h2 class="section-title fade-in">Up and running in minutes</h2>
+    <h2 class="section-title fade-in">Build and configure the gateway</h2>
+    <p class="section-sub fade-in">The tested firmware is an experimental homelab adaptation. DERP TLS certificate verification, wake-command authorization and reconnect endurance have not passed production-security validation. <a href="https://github.com/vmanX8/ESP32-WoL/blob/main/docs/VALIDATION_AND_LIMITATIONS.md">Read the validation limits</a> before deployment.</p>
     <p class="section-sub fade-in">The setup script handles everything: ESP-IDF check, configuration, build, and flash.</p>
 
     <div class="quickstart-steps">
@@ -585,8 +584,8 @@
         <div class="qs-num">1</div>
         <div>
           <div class="qs-label">Clone the repo</div>
-          <pre><code class="language-bash">git clone https://github.com/medinajaime/esp32-wakeonlan.git
-cd esp32-wakeonlan</code></pre>
+          <pre><code class="language-bash">git clone https://github.com/vmanX8/ESP32-WoL.git
+cd ESP32-WoL</code></pre>
         </div>
       </div>
 

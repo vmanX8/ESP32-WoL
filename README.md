@@ -31,7 +31,7 @@ The firmware, dependencies, setup scripts, third-party notices and implementatio
 
 ## Tested adaptation — 10 November 2026
 
-This repository adapts the original project for an **ESP32-WROOM-32D dev kit**
+I adapted the original project for an **ESP32-WROOM-32D dev kit**
 (4 MB flash, no PSRAM) and an Ethernet-connected Proxmox host. The firmware
 was built with **ESP-IDF v5.5.3**, and an Android Tailscale peer successfully
 woke the target from complete shutdown **twice**, including a shutdown between
@@ -40,9 +40,8 @@ validated.
 
 Relative to upstream, the local changes cover safer Noise/HTTP2 parsing and
 key persistence, WireGuard initialization, DERP queue/reconnect handling, and
-lwIP timer lifecycle. They were developed and reviewed with AI assistance,
-then built and tested on the actual device. This is a tested adaptation, **not
-an independently implemented Tailscale/WireGuard stack**.
+lwIP timer lifecycle. I developed and reviewed these changes with AI assistance,
+then built and verified on the ESP32-WROOM-32D hardware in the reported scenarios. This is an upstream-based adaptation, **not an independently implemented Tailscale/WireGuard stack**.
 
 - [Final implementation differences from upstream](docs/CHANGES_FROM_UPSTREAM.md)
 - [Hardware validation, limitations and security status](docs/VALIDATION_AND_LIMITATIONS.md)
