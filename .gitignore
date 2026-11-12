@@ -1,3 +1,7 @@
+# Local AI working files
+.agent-local/
+AGENTS.md
+
 # ESP32-WoL — ESP-IDF, Tailscale and local development
 # Defense in depth only: review the staged diff before every public push.
 
