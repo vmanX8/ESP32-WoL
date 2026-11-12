@@ -4,17 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ESP32 Wake-on-LAN — Wake your PC from anywhere via Tailscale</title>
-  <meta name="description" content="A $5 ESP32 runs Tailscale and WireGuard directly on the chip and wakes your PC from anywhere. No Raspberry Pi, no port forwarding, no always-on server.">
+  <meta name="description" content="ESP32-WROOM-32D gateway for Tailscale-relayed Wake-on-LAN, with two observed remote wake cycles and documented security limitations.">
 
   <!-- Open Graph -->
   <meta property="og:title" content="ESP32 Wake-on-LAN — Wake your PC from anywhere via Tailscale">
-  <meta property="og:description" content="A $5 ESP32 runs Tailscale and WireGuard directly on the chip and wakes your PC from anywhere. No Raspberry Pi, no port forwarding, no always-on server.">
+  <meta property="og:description" content="ESP32-WROOM-32D gateway for Tailscale-relayed Wake-on-LAN, with two observed remote wake cycles and documented security limitations.">
   <meta property="og:type" content="website">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="ESP32 Wake-on-LAN — Wake your PC from anywhere via Tailscale">
-  <meta name="twitter:description" content="A $5 ESP32 runs Tailscale and WireGuard directly on the chip and wakes your PC from anywhere. No Raspberry Pi, no port forwarding, no always-on server.">
+  <meta name="twitter:description" content="ESP32-WROOM-32D gateway for Tailscale-relayed Wake-on-LAN, with two observed remote wake cycles and documented security limitations.">
 
   <link rel="stylesheet" href="style.css">
   <style>
@@ -411,11 +411,11 @@
 <!-- Hero -->
 <section class="hero">
   <div class="hero-eyebrow">
-    <span>⚡</span> ESP32 &nbsp;·&nbsp; Tailscale &nbsp;·&nbsp; WireGuard &nbsp;·&nbsp; ~$5
+    <span>⚡</span> ESP32-WROOM-32D &nbsp;·&nbsp; Tailscale &nbsp;·&nbsp; WireGuard
   </div>
   <h1>Wake your PC<br>from <em>anywhere</em>.</h1>
   <p class="hero-sub">
-    A $5 ESP32 joins your Tailscale network and stays on your LAN 24/7.
+    An ESP32-WROOM-32D remains powered on and joins the configured Tailscale network.
     An authorized Tailscale client sends a UDP wake request to the ESP32 gateway, which broadcasts a Magic Packet to the local Ethernet network.
     No public port forwarding in the tested setup. The ESP32 remains powered on.
   </p>
